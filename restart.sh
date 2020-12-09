@@ -1,6 +1,7 @@
 #!/bin/bash
 sudo systemctl stop geth
 sudo systemctl stop prysmbeacon
+sudo systemctl stop prysmvalidator
 sleep 3
 cp ~/download/geth ~/current/geth
 cp ~/download/validator* ~/current/validator
@@ -9,3 +10,4 @@ cd ~/current
 chmod +x beacon-chain validator geth
 sudo systemctl start geth
 sudo systemctl start prysmbeacon
+sudo systemctl start prysmvalidator
