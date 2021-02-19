@@ -1,0 +1,8 @@
+tmux send-keys "sudo tail -f /var/log/syslog| grep vpn | ccze" Enter
+tmux split-window  -t ssh_tmux "/usr/bin/zsh -c 'sudo journalctl -fu geth.service | ccze'"
+tmux split-window  -t ssh_tmux "/usr/bin/zsh -c 'sudo journalctl -fu prysm-beacon.service | ccze'"
+tmux split-window  -t ssh_tmux "/usr/bin/zsh -c 'sudo journalctl -fu prysm-validator.service | ccze '"
+
+tmux select-layout -t ssh_tmux even-vertical
+tmux selectp -t 1
+tmux split-window -h -p 40 -t ssh_tmux htop
