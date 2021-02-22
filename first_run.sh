@@ -17,17 +17,17 @@ sed -i "s/127.0.1.1.*/127.0.1.1\tethnode-$MAC_HASH/g" /etc/hosts
 
 if stat  /dev/nvme0n1 > /dev/null 2>&1;
 then
-        echo Formatting NVMe Drive...
-        fdisk /dev/nvme0n1 <<EOF
-d
-n
-p
-1
+#        echo Formatting NVMe Drive...
+#        fdisk /dev/nvme0n1 <<EOF
+#d
+#n
+#p
+#1
 
 
-w
-EOF
-mkfs.ext4 -F /dev/nvme0n1p1
+#w
+#EOF
+#mkfs.ext4 -F /dev/nvme0n1p1
 echo '/dev/nvme0n1p1 /home ext4 defaults 0 2' >> /etc/fstab && mount /home
 
 else
@@ -69,10 +69,10 @@ rm -rf /root/.not_logged_in_yet
 echo "vm.min_free_kbytes=262144" >> /etc/sysctl.conf
 
 # Create an alias for updating ethereum packages
-cat <<EOF >> /etc/bash.bashrc
+cat <<EOF >> /home/ethereum/.zshrc
 alias update-ethereum='
 sudo apt-get update
-sudo apt-get install geth ipfs parity raiden status.im-node'
+sudo apt-get install geth prysm prysm-beacon prysm-validator'
 EOF
 
 #-----------------------------------------------------------------
