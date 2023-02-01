@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo nimbus
+remote_version=$(curl -s https://api.github.com/repos/status-im/nimbus-eth2/releases/latest | jq .tag_name)
+remote_version="${remote_version//'"'}"
+if [ -z "$remote_version" ]; then echo "remote vide" && exit; fi
+echo $remote_version
+local_version=$(cat /home/eclips/current_version_nimbus)
+echo $local_version
+
+if [ "$remote_version" = "$local_version" ]; then
+    echo "nimbus a jour"
+else
+    echo "updating"
+    cd /home/eclips/nimbus
+    sudo service nimbus stop
+    curl -s https://api.github.com/repos/status-im/nimbus-eth2/releases/latest | jq -r ".assets[] | select(.name | contains(\"Linux_amd\")) | .browser_download_url" | wget -i -
+    tar xvzf nimbus-eth2_Linux_amd64*.tar.gz  --strip-components=1 -C /home/eclips/nimbus/nimbus-bin
+    sudo service nimbus start
+    rm -rf /home/eclips/nimbus/nimbus-eth2_Linux_amd64_*
+    echo $remote_version > //home/eclips/current_version_nimbus
+fi
