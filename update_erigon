@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo erigon
+
+remote_version=$(curl -s https://api.github.com/repos/ledgerwatch/erigon/releases/latest | jq .tag_name)
+remote_version="${remote_version//'"'}"
+if [ -z "$remote_version" ]; then echo "remote vide" && exit; fi
+echo $remote_version
+local_version=$(cat /home/eclips/current_version_erigon)
+echo $local_version
+
+if [ "$remote_version" = "$local_version" ]; then
+    echo "erigon a jour"
+else
+    echo "updating"
+    cd /home/eclips/erigon
+    sudo service erigon stop
+    curl -s https://api.github.com/repos/ledgerwatch/erigon/releases/latest | jq -r ".assets[] | select(.name | contains(\"linux_amd\")) | .browser_download_url" | wget -i -
+    tar xvzf erigon_*.tar.gz -C /home/eclips/erigon/erigon-bin
+    sudo service erigon start
+    rm -rf /home/eclips/erigon/erigon_*
+    echo $remote_version > /home/eclips/current_version_erigon
+fi
